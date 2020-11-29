@@ -547,11 +547,19 @@ extension JTACMonthView {
         if retrievedPathsFromDates.isEmpty { return }
         let sectionIndexPath = pathsFromDates([date])[0]
         
+        guard scrollingMode != .none else {
+            let preferredScrollPosition = preferredScrollPosition ?? (scrollDirection == .horizontal ? .left : .top)
+            scrollToItem(at: sectionIndexPath,
+                         at: preferredScrollPosition,
+                         animated: true)
+            return
+        }
+        
         guard let point = targetPointForItemAt(indexPath: sectionIndexPath) else {
             assert(false, "Could not determine CGPoint. This is an error. contact developer on github. In production, there will not be a crash, but scrolling will not occur")
             return
         }
-
+        
         scrollTo(point: point,
                  triggerScrollToDateDelegate: triggerScrollToDateDelegate,
                  isAnimationEnabled: animateScroll,
